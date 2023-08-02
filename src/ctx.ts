@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { ServerInstaller } from '@statiolake/coc-utils/out/installer';
 import {
   commands,
   Disposable,
@@ -12,12 +12,10 @@ import {
   window,
   workspace,
 } from 'coc.nvim';
-import executable from 'executable';
 import * as fs from 'fs-extra';
-import versionCompare from 'node-version-compare';
 import path from 'path';
 import { Config } from './config';
-import { downloadServer, getLatestRelease } from './downloader';
+import { getPacks, getRepo } from './installer';
 import { Neodev } from './neodev';
 
 export type LuaDocument = TextDocument & { languageId: 'lua' };
@@ -33,42 +31,48 @@ export class Ctx {
   public readonly config = new Config();
   barTooltip = '';
   neodev!: Neodev;
+  public readonly installer: ServerInstaller;
 
-  constructor(public readonly extCtx: ExtensionContext) {
-    this.neodev = new Neodev(extCtx);
+  constructor(public readonly extctx: ExtensionContext) {
+    this.neodev = new Neodev(extctx);
+    this.installer = new ServerInstaller(
+      'lua-language-server',
+      extctx,
+      getPacks(),
+      getRepo(this.config.version),
+      this.config.customPath
+    );
   }
 
-  registerCommand(name: string, factory: (ctx: Ctx) => Cmd, internal = false) {
+  registerCommand(name: string, cmd: (ctx: Ctx) => unknown, internal = false) {
     const fullName = `sumneko-lua.${name}`;
-    const cmd = factory(this);
     const d = commands.registerCommand(fullName, cmd, null, internal);
-    this.extCtx.subscriptions.push(d);
+    this.extctx.subscriptions.push(d);
   }
 
   get subscriptions(): Disposable[] {
-    return this.extCtx.subscriptions;
+    return this.extctx.subscriptions;
   }
 
   resolveBin(): [string, string[]] | undefined {
     // TODO: handle Lua.misc.executablePath
-    const serverDir = this.config.serverDir
-      ? this.config.serverDir
-      : path.join(this.extCtx.storagePath, 'sumneko-lua-ls', 'extension', 'server');
-
-    const platform = process.platform;
-    const bin = path.join(serverDir, 'bin', platform === 'win32' ? 'lua-language-server.exe' : 'lua-language-server');
-    if (!fs.existsSync(bin)) {
-      return;
+    const bin = this.installer.path;
+    if (!bin || !fs.existsSync(bin)) {
+      return undefined;
     }
 
-    if (!executable.sync(bin)) {
-      window.showInformationMessage(`${bin} is not executable`, 'error');
-      return;
-    }
+    // lua-language-serber should be in .../bin/lua-language-server, so we
+    // need two dirnames to get server directory.
+    const serverDir = path.dirname(path.dirname(bin));
+    const miscParameters = workspace.getConfiguration('Lua').get<string[]>('misc.parameters')!;
 
-    const args: string[] = ['-E', path.join(serverDir, 'bin', 'main.lua'), `--locale=${this.config.locale}`].concat(
-      workspace.getConfiguration('Lua').get<string[]>('misc.parameters')!
-    );
+    const args: string[] = [
+      '-E',
+      path.join(serverDir, 'bin', 'main.lua'),
+      `--locale=${this.config.locale}`,
+      ...miscParameters,
+    ];
+
     if (this.config.logPath.length > 0) {
       args.push(`--logpath=${this.config.logPath}`);
     }
@@ -76,70 +80,49 @@ export class Ctx {
     return [bin, args];
   }
 
-  async getCurrentVersion(): Promise<string | undefined> {
-    if (this.config.serverDir) {
-      const bin = this.resolveBin();
-      if (!bin) return;
-      const [cmd, args] = bin;
-      args.push('--version');
-      try {
-        return String(execSync(`${cmd} ${args.join(' ')}`)).trim();
-      } catch (err) {
-        console.log(err);
-        return;
-      }
-    } else {
-      // must be based on the version of vscode extension
-      try {
-        const packageJson = path.join(this.extCtx.storagePath, 'sumneko-lua-ls', 'extension', 'package.json');
-        const packageData = await fs.readJson(packageJson);
-        return packageData.version;
-      } catch (err) {
-        console.error(err);
-        return;
-      }
+  public async ensureInstalled(): Promise<boolean> {
+    const res = await this.installer.ensureInstalled(
+      this.config.prompt === true,
+      this.config.prompt !== 'neverDownload'
+    );
+
+    logger.appendLine('ensureInstalled() result: ' + JSON.stringify(res));
+    return res.available;
+  }
+
+  public async ensureUpdated(auto = true): Promise<void> {
+    logger.appendLine(`Check update (auto: ${auto})`);
+    if (auto && !this.config.checkOnStartup) {
+      logger.appendLine('Skip update check, config `checkOnStartup` is disabled.');
+      return;
+    }
+
+    const res = await this.installer.ensureUpdated(
+      this.config.prompt === true,
+      this.config.prompt !== 'neverDownload',
+      !auto,
+      this.client
+    );
+    logger.appendLine('ensureUpdated() result: ' + JSON.stringify(res));
+
+    if ('error' in res) {
+      logger.appendLine('error stacktrace: ' + res.error.stack);
+    }
+
+    if ('startedClientDisposable' in res && res.startedClientDisposable) {
+      this.extctx.subscriptions.push(res.startedClientDisposable);
     }
   }
 
-  async checkUpdate() {
-    // no need
-    if (this.config.serverDir) return;
-
-    const currentVersion = await this.getCurrentVersion();
-    if (!currentVersion) return;
-
-    const latest = await getLatestRelease();
-    if (!latest) {
-      return;
+  async getCurrentVersion(): Promise<string | undefined> {
+    const version = await this.installer.checkVersion();
+    if (version.result === 'different') {
+      return version.currentVersion;
     }
-    const latestVersion = latest.version.match(/\d.*/);
-    if (!latestVersion) {
-      return;
+    if (version.result === 'same') {
+      return version.version;
     }
-
-    if (versionCompare(latestVersion[0], currentVersion) <= 0) {
-      return;
-    }
-
-    const msg = `Sumneko lua-language-server has a new release: ${latest.version}, you're using v${currentVersion}.`;
-    if (this.config.prompt) {
-      const ret = await window.showQuickpick(['Download the latest server', 'Cancel'], msg);
-      if (ret === 0) {
-        await this.client.stop();
-        try {
-          await downloadServer(this.extCtx, latest);
-        } catch (e) {
-          console.error(e);
-          window.showInformationMessage('Upgrade server failed', 'error');
-          return;
-        }
-        this.client.start();
-      } else {
-        window.showInformationMessage(`You can run ':CocCommand sumneko-lua.install' to upgrade server manually`);
-      }
-    } else {
-      window.showInformationMessage(`${msg} Run :CocCommand sumneko-lua.install to upgrade`);
-    }
+    return undefined;
   }
 
   createClient(): undefined | LanguageClient {
@@ -147,6 +130,8 @@ export class Ctx {
     if (!bin) return;
 
     const [command, args] = bin;
+    logger.appendLine(`command: ${command}`);
+    logger.appendLine(`args: ${args}`);
 
     const serverOptions: ServerOptions = { command, args };
 
@@ -204,7 +189,7 @@ export class Ctx {
   async startServer() {
     const client = this.createClient();
     if (!client) return;
-    this.extCtx.subscriptions.push(services.registLanguageClient(client));
+    this.extctx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
     this.client = client;
     // activate components
@@ -215,7 +200,7 @@ export class Ctx {
   activateStatusBar() {
     // window status bar
     const bar = window.createStatusBarItem();
-    this.extCtx.subscriptions.push(bar);
+    this.extctx.subscriptions.push(bar);
 
     let keepHide = false;
 
@@ -245,7 +230,7 @@ export class Ctx {
         }
       },
       null,
-      this.extCtx.subscriptions
+      this.extctx.subscriptions
     );
   }
 

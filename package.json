@@ -28,6 +28,9 @@
     "printWidth": 120,
     "semi": true
   },
+  "dependencies": {
+    "@statiolake/coc-utils": "0.0.7"
+  },
   "devDependencies": {
     "@types/fs-extra": "^9.0.12",
     "@types/node": "^16.0.1",
@@ -62,7 +65,15 @@
           "description": "Enable coc-sumneko-lua extension"
         },
         "sumneko-lua.prompt": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "enum": [
+            true,
+            false,
+            "neverDownload"
+          ],
           "default": true,
           "description": "Prompt when server is not found or when server can be updated"
         },
@@ -93,15 +104,19 @@
           "default": false,
           "description": "Enable the nvim lua development"
         },
-        "sumneko-lua.checkUpdate": {
+        "sumneko-lua.checkOnStartup": {
           "type": "boolean",
           "default": true,
           "description": "Automatically check for updates after startup(Only one check within 4 hours)"
         },
-        "sumneko-lua.serverDir": {
+        "sumneko-lua.version": {
           "type": "string",
-          "default": null,
-          "description": "The server directory which contains: bin/, changelog.md, debugger.lua, locale/, main.lua, meta/, script/. Download and set by default"
+          "default": "latest",
+          "description": "The server version to download."
+        },
+        "sumneko-lua.customPath": {
+          "type": "string",
+          "description": "The custom server path."
         },
         "Lua.addonManager.enable": {
           "default": true,

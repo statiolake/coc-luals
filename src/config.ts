@@ -14,7 +14,7 @@ export class Config {
   }
 
   get prompt() {
-    return this.cfg.get<boolean>('prompt');
+    return this.cfg.get<boolean | 'neverDownload'>('prompt');
   }
 
   get locale() {
@@ -29,11 +29,15 @@ export class Config {
     return this.cfg.get<boolean>('enableNvimLuaDev');
   }
 
-  get checkUpdate() {
-    return this.cfg.get<boolean>('checkUpdate');
+  get checkOnStartup() {
+    return this.cfg.get<boolean>('checkOnStartup');
   }
 
-  get serverDir() {
-    return this.cfg.get<string>('serverDir');
+  get version() {
+    return this.cfg.get<string>('version', 'latest');
+  }
+
+  get customPath() {
+    return this.cfg.get<string>('customPath');
   }
 }
