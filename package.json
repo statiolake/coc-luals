@@ -1,8 +1,8 @@
 {
-  "name": "coc-sumneko-lua",
-  "version": "0.0.39",
+  "name": "@statiolake/coc-sumneko-lua",
+  "version": "0.0.40",
   "description": "Lua extension using sumneko lua-language-server for coc.nvim",
-  "author": "wongxy <xiyao.wong@foxmail.com>",
+  "author": "statiolake <statiolake@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",
   "keywords": [
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xiyaowong/coc-sumneko-lua.git"
+    "url": "https://github.com/statiolake/coc-sumneko-lua.git"
   },
   "scripts": {
     "lint": "eslint src --ext ts",
