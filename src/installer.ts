@@ -15,12 +15,12 @@ export function getPacks(): ILanguageServerPackages {
     'osx-x64': {
       platformFilename: /lua-language-server-.*-darwin-x64.tar.gz/,
       archiver: 'tar-gzip',
-      executable: 'stylua',
+      executable: 'bin/lua-language-server',
     },
     'osx-arm64': {
       platformFilename: /lua-language-server-.*-darwin-arm64.tar.gz/,
       archiver: 'tar-gzip',
-      executable: 'rust-analyzer',
+      executable: 'bin/lua-language-server',
     },
   };
 }
