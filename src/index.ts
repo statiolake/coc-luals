@@ -20,13 +20,14 @@ export async function activate(extctx: ExtensionContext): Promise<void> {
   ctx.registerCommand('version', cmds.version);
   ctx.registerCommand('restart', (ctx) => {
     return async () => {
-      window.showInformationMessage(`Reloading sumneko lua-language-server...`);
+      window.showInformationMessage(`Reloading sumneko lua-language-server...`)
 
       for (const sub of ctx.subscriptions) {
         try {
-          sub.dispose();
-        } catch (e) {
-          console.error(e);
+          sub.dispose()
+        }
+        catch (e) {
+          console.error(e)
         }
       }
 

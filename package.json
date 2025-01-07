@@ -4,52 +4,16 @@
   "description": "Lua extension using sumneko lua-language-server for coc.nvim",
   "author": "statiolake <statiolake@gmail.com>",
   "license": "MIT",
-  "main": "lib/index.js",
-  "keywords": [
-    "coc.nvim"
-  ],
-  "engines": {
-    "coc": "^0.0.80"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/statiolake/coc-sumneko-lua.git"
   },
-  "scripts": {
-    "lint": "eslint src --ext ts",
-    "clean": "rimraf lib",
-    "watch": "node esbuild.js --watch",
-    "build": "node esbuild.js",
-    "prepare": "node esbuild.js",
-    "schema": "node ./update-config.js"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "printWidth": 120,
-    "semi": true
-  },
-  "dependencies": {
-    "@statiolake/coc-utils": "0.2.0"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.10.5",
-    "@types/node-fetch": "^2.6.12",
-    "@typescript-eslint/eslint-plugin": "^8.19.1",
-    "@typescript-eslint/parser": "^8.19.1",
-    "coc.nvim": "^0.0.83-next.9",
-    "esbuild": "^0.24.2",
-    "eslint": "^9.17.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "executable": "^4.1.1",
-    "extract-zip": "^2.0.1",
-    "fs-extra": "^11.2.0",
-    "node-fetch": "^3.3.2",
-    "node-version-compare": "^1.0.3",
-    "prettier": "^3.4.2",
-    "rimraf": "^6.0.1",
-    "typescript": "^5.7.2"
+  "keywords": [
+    "coc.nvim"
+  ],
+  "main": "lib/index.js",
+  "engines": {
+    "coc": "^0.0.80"
   },
   "activationEvents": [
     "onLanguage:lua"
@@ -262,6 +226,7 @@
               "global-in-nil-env",
               "incomplete-signature-doc",
               "index-in-func-name",
+              "inject-field",
               "invisible",
               "jump-local-scope",
               "keyword",
@@ -305,10 +270,13 @@
               "miss-sep-in-table",
               "miss-space-between",
               "miss-symbol",
+              "missing-fields",
               "missing-global-doc",
+              "missing-local-export-doc",
               "missing-parameter",
               "missing-return",
               "missing-return-value",
+              "name-style-check",
               "need-check-nil",
               "need-paren",
               "nesting-long-mark",
@@ -412,7 +380,7 @@
             },
             "codestyle": {
               "default": "Fallback",
-              "description": "* codestyle-check\n* spell-check",
+              "description": "* codestyle-check\n* name-style-check\n* spell-check",
               "enum": [
                 "Any",
                 "Opened",
@@ -456,7 +424,7 @@
             },
             "luadoc": {
               "default": "Fallback",
-              "description": "* circle-doc-class\n* doc-field-no-class\n* duplicate-doc-alias\n* duplicate-doc-field\n* duplicate-doc-param\n* incomplete-signature-doc\n* missing-global-doc\n* undefined-doc-class\n* undefined-doc-name\n* undefined-doc-param\n* unknown-cast-variable\n* unknown-diag-code\n* unknown-operator",
+              "description": "* circle-doc-class\n* doc-field-no-class\n* duplicate-doc-alias\n* duplicate-doc-field\n* duplicate-doc-param\n* incomplete-signature-doc\n* missing-global-doc\n* missing-local-export-doc\n* undefined-doc-class\n* undefined-doc-name\n* undefined-doc-param\n* unknown-cast-variable\n* unknown-diag-code\n* unknown-operator",
               "enum": [
                 "Any",
                 "Opened",
@@ -500,7 +468,7 @@
             },
             "type-check": {
               "default": "Fallback",
-              "description": "* assign-type-mismatch\n* cast-local-type\n* cast-type-mismatch\n* need-check-nil\n* param-type-mismatch\n* return-type-mismatch\n* undefined-field",
+              "description": "* assign-type-mismatch\n* cast-local-type\n* cast-type-mismatch\n* inject-field\n* need-check-nil\n* param-type-mismatch\n* return-type-mismatch\n* undefined-field",
               "enum": [
                 "Any",
                 "Opened",
@@ -511,7 +479,7 @@
             },
             "unbalanced": {
               "default": "Fallback",
-              "description": "* missing-parameter\n* missing-return\n* missing-return-value\n* redundant-parameter\n* redundant-return-value\n* redundant-value\n* unbalanced-assignments",
+              "description": "* missing-fields\n* missing-parameter\n* missing-return\n* missing-return-value\n* redundant-parameter\n* redundant-return-value\n* redundant-value\n* unbalanced-assignments",
               "enum": [
                 "Any",
                 "Opened",
@@ -566,7 +534,7 @@
             },
             "codestyle": {
               "default": "Fallback",
-              "description": "* codestyle-check\n* spell-check",
+              "description": "* codestyle-check\n* name-style-check\n* spell-check",
               "enum": [
                 "Error",
                 "Warning",
@@ -614,7 +582,7 @@
             },
             "luadoc": {
               "default": "Fallback",
-              "description": "* circle-doc-class\n* doc-field-no-class\n* duplicate-doc-alias\n* duplicate-doc-field\n* duplicate-doc-param\n* incomplete-signature-doc\n* missing-global-doc\n* undefined-doc-class\n* undefined-doc-name\n* undefined-doc-param\n* unknown-cast-variable\n* unknown-diag-code\n* unknown-operator",
+              "description": "* circle-doc-class\n* doc-field-no-class\n* duplicate-doc-alias\n* duplicate-doc-field\n* duplicate-doc-param\n* incomplete-signature-doc\n* missing-global-doc\n* missing-local-export-doc\n* undefined-doc-class\n* undefined-doc-name\n* undefined-doc-param\n* unknown-cast-variable\n* unknown-diag-code\n* unknown-operator",
               "enum": [
                 "Error",
                 "Warning",
@@ -662,7 +630,7 @@
             },
             "type-check": {
               "default": "Fallback",
-              "description": "* assign-type-mismatch\n* cast-local-type\n* cast-type-mismatch\n* need-check-nil\n* param-type-mismatch\n* return-type-mismatch\n* undefined-field",
+              "description": "* assign-type-mismatch\n* cast-local-type\n* cast-type-mismatch\n* inject-field\n* need-check-nil\n* param-type-mismatch\n* return-type-mismatch\n* undefined-field",
               "enum": [
                 "Error",
                 "Warning",
@@ -674,7 +642,7 @@
             },
             "unbalanced": {
               "default": "Fallback",
-              "description": "* missing-parameter\n* missing-return\n* missing-return-value\n* redundant-parameter\n* redundant-return-value\n* redundant-value\n* unbalanced-assignments",
+              "description": "* missing-fields\n* missing-parameter\n* missing-return\n* missing-return-value\n* redundant-parameter\n* redundant-return-value\n* redundant-value\n* unbalanced-assignments",
               "enum": [
                 "Error",
                 "Warning",
@@ -804,7 +772,7 @@
             },
             "circle-doc-class": {
               "default": "Any",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "Any",
                 "Opened",
@@ -1036,6 +1004,19 @@
               ],
               "type": "string"
             },
+            "inject-field": {
+              "default": "Opened",
+              "description": "TODO: Needs documentation",
+              "enum": [
+                "Any",
+                "Opened",
+                "None",
+                "Any!",
+                "Opened!",
+                "None!"
+              ],
+              "type": "string"
+            },
             "invisible": {
               "default": "Any",
               "description": "Enable diagnostics for accesses to fields which are invisible.",
@@ -1062,9 +1043,35 @@
               ],
               "type": "string"
             },
+            "missing-fields": {
+              "default": "Any",
+              "description": "TODO: Needs documentation",
+              "enum": [
+                "Any",
+                "Opened",
+                "None",
+                "Any!",
+                "Opened!",
+                "None!"
+              ],
+              "type": "string"
+            },
             "missing-global-doc": {
               "default": "None",
               "description": "Missing annotations for globals! Global functions must have a comment and annotations for all parameters and return values.",
+              "enum": [
+                "Any",
+                "Opened",
+                "None",
+                "Any!",
+                "Opened!",
+                "None!"
+              ],
+              "type": "string"
+            },
+            "missing-local-export-doc": {
+              "default": "None",
+              "description": "Missing annotations for exported locals! Exported local functions must have a comment and annotations for all parameters and return values.",
               "enum": [
                 "Any",
                 "Opened",
@@ -1104,6 +1111,19 @@
             "missing-return-value": {
               "default": "Any",
               "description": "Enable diagnostics for return statements without values although the containing function declares returns.",
+              "enum": [
+                "Any",
+                "Opened",
+                "None",
+                "Any!",
+                "Opened!",
+                "None!"
+              ],
+              "type": "string"
+            },
+            "name-style-check": {
+              "default": "None",
+              "description": "Enable diagnostics for name style.",
               "enum": [
                 "Any",
                 "Opened",
@@ -1577,7 +1597,7 @@
             },
             "circle-doc-class": {
               "default": "Warning",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "Error",
                 "Warning",
@@ -1845,6 +1865,21 @@
               ],
               "type": "string"
             },
+            "inject-field": {
+              "default": "Warning",
+              "description": "TODO: Needs documentation",
+              "enum": [
+                "Error",
+                "Warning",
+                "Information",
+                "Hint",
+                "Error!",
+                "Warning!",
+                "Information!",
+                "Hint!"
+              ],
+              "type": "string"
+            },
             "invisible": {
               "default": "Warning",
               "description": "Enable diagnostics for accesses to fields which are invisible.",
@@ -1875,9 +1910,39 @@
               ],
               "type": "string"
             },
+            "missing-fields": {
+              "default": "Warning",
+              "description": "TODO: Needs documentation",
+              "enum": [
+                "Error",
+                "Warning",
+                "Information",
+                "Hint",
+                "Error!",
+                "Warning!",
+                "Information!",
+                "Hint!"
+              ],
+              "type": "string"
+            },
             "missing-global-doc": {
               "default": "Warning",
               "description": "Missing annotations for globals! Global functions must have a comment and annotations for all parameters and return values.",
+              "enum": [
+                "Error",
+                "Warning",
+                "Information",
+                "Hint",
+                "Error!",
+                "Warning!",
+                "Information!",
+                "Hint!"
+              ],
+              "type": "string"
+            },
+            "missing-local-export-doc": {
+              "default": "Warning",
+              "description": "Missing annotations for exported locals! Exported local functions must have a comment and annotations for all parameters and return values.",
               "enum": [
                 "Error",
                 "Warning",
@@ -1923,6 +1988,21 @@
             "missing-return-value": {
               "default": "Warning",
               "description": "Enable diagnostics for return statements without values although the containing function declares returns.",
+              "enum": [
+                "Error",
+                "Warning",
+                "Information",
+                "Hint",
+                "Error!",
+                "Warning!",
+                "Information!",
+                "Hint!"
+              ],
+              "type": "string"
+            },
+            "name-style-check": {
+              "default": "Warning",
+              "description": "Enable diagnostics for name style.",
               "enum": [
                 "Error",
                 "Warning",
@@ -2588,13 +2668,29 @@
           "scope": "resource",
           "type": "array"
         },
+        "Lua.nameStyle.config": {
+          "additionalProperties": false,
+          "default": {},
+          "markdownDescription": "Set name style config",
+          "patternProperties": {
+            ".*": {
+              "type": [
+                "string",
+                "array"
+              ]
+            }
+          },
+          "scope": "resource",
+          "title": "config",
+          "type": "object"
+        },
         "Lua.runtime.builtin": {
           "additionalProperties": false,
           "markdownDescription": "Adjust the enabled state of the built-in library. You can disable (or redefine) the non-existent library according to the actual runtime environment.\n\n* `default`: Indicates that the library will be enabled or disabled according to the runtime version\n* `enable`: always enable\n* `disable`: always disable\n",
           "properties": {
             "basic": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2604,7 +2700,7 @@
             },
             "bit": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2614,7 +2710,7 @@
             },
             "bit32": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2624,7 +2720,7 @@
             },
             "builtin": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2634,7 +2730,7 @@
             },
             "coroutine": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2644,7 +2740,7 @@
             },
             "debug": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2654,7 +2750,7 @@
             },
             "ffi": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2664,7 +2760,7 @@
             },
             "io": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2674,7 +2770,27 @@
             },
             "jit": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
+              "enum": [
+                "default",
+                "enable",
+                "disable"
+              ],
+              "type": "string"
+            },
+            "jit.profile": {
+              "default": "default",
+              "description": "TODO: Needs documentation",
+              "enum": [
+                "default",
+                "enable",
+                "disable"
+              ],
+              "type": "string"
+            },
+            "jit.util": {
+              "default": "default",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2684,7 +2800,7 @@
             },
             "math": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2694,7 +2810,7 @@
             },
             "os": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2704,7 +2820,7 @@
             },
             "package": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2714,7 +2830,7 @@
             },
             "string": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2724,7 +2840,7 @@
             },
             "string.buffer": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2734,7 +2850,7 @@
             },
             "table": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2744,7 +2860,7 @@
             },
             "table.clear": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2754,7 +2870,7 @@
             },
             "table.new": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2764,7 +2880,7 @@
             },
             "utf8": {
               "default": "default",
-              "description": "",
+              "description": "TODO: Needs documentation",
               "enum": [
                 "default",
                 "enable",
@@ -2787,10 +2903,10 @@
           ],
           "markdownDescription": "File encoding. The `ansi` option is only available under the `Windows` platform.",
           "markdownEnumDescriptions": [
-            "",
-            "",
-            "",
-            ""
+            "TODO: Needs documentation",
+            "TODO: Needs documentation",
+            "TODO: Needs documentation",
+            "TODO: Needs documentation"
           ],
           "scope": "resource",
           "type": "string"
@@ -2851,7 +2967,7 @@
         },
         "Lua.runtime.plugin": {
           "default": "",
-          "markdownDescription": "Plugin path. Please read [wiki](https://github.com/LuaLS/lua-language-server/wiki/Plugins) to learn more.",
+          "markdownDescription": "Plugin path. Please read [wiki](https://luals.github.io/wiki/plugins) to learn more.",
           "scope": "resource",
           "type": "string"
         },
@@ -2910,11 +3026,11 @@
           ],
           "markdownDescription": "Lua runtime version.",
           "markdownEnumDescriptions": [
-            "",
-            "",
-            "",
-            "",
-            ""
+            "TODO: Needs documentation",
+            "TODO: Needs documentation",
+            "TODO: Needs documentation",
+            "TODO: Needs documentation",
+            "TODO: Needs documentation"
           ],
           "scope": "resource",
           "type": "string"
@@ -3013,10 +3129,12 @@
           "type": "boolean"
         },
         "Lua.workspace.checkThirdParty": {
-          "default": true,
           "markdownDescription": "Automatic detection and adaptation of third-party libraries, currently supported libraries are:\n\n* OpenResty\n* Cocos4.0\n* LÖVE\n* LÖVR\n* skynet\n* Jass\n",
           "scope": "resource",
-          "type": "boolean"
+          "type": [
+            "string",
+            "boolean"
+          ]
         },
         "Lua.workspace.ignoreDir": {
           "default": [
@@ -3110,5 +3228,36 @@
         "category": "Sumneko lua-language-server"
       }
     ]
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "clean": "rimraf lib",
+    "watch": "node esbuild.mjs --watch",
+    "build": "node esbuild.mjs",
+    "prepare": "node esbuild.mjs",
+    "schema": "node ./update-config.js",
+    "release": "bumpp && npm publish"
+  },
+  "dependencies": {
+    "@statiolake/coc-utils": "^0.2.3",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.10.5",
+    "@types/node-fetch": "2.6.12",
+    "@wongxy/eslint-config": "^1.1.1",
+    "bumpp": "^9.9.2",
+    "coc.nvim": "^0.0.83-next.18",
+    "esbuild": "0.24.2",
+    "eslint": "^9.17.0",
+    "executable": "^4.1.1",
+    "extract-zip": "^2.0.1",
+    "fs-extra": "^11.2.0",
+    "node-fetch": "3.3.2",
+    "node-version-compare": "^1.0.3",
+    "rimraf": "^6.0.1",
+    "typescript": "5.7.2"
   }
 }

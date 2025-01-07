@@ -1,4 +1,3 @@
-
 # Get more information
 
 - [schema.json](https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json)
@@ -13,11 +12,11 @@
 - description:    Prompt when server is not found or when server can be updated
 ## `sumneko-lua.locale`
 - type: `string`
-- default: `en-us`
+- default: `"en-us"`
 - description:    The localized language used
 ## `sumneko-lua.logPath`
 - type: `string`
-- default: ``
+- default: `""`
 - description:    The log path
 ## `sumneko-lua.enableNvimLuaDev`
 - type: `boolean`
@@ -31,6 +30,10 @@
 - type: `string`
 - default: `null`
 - description:    The server directory which contains: bin/, changelog.md, debugger.lua, locale/, main.lua, meta/, script/. Download and set by default
+## `Lua.addonManager.enable`
+- type: `boolean`
+- default: `true`
+- description:    Whether the addon manager is enabled or not.
 ## `Lua.codeLens.enable`
 - type: `boolean`
 - default: `false`
@@ -41,7 +44,7 @@
 - description:    When the input looks like a file name, automatically `require` this file.
 ## `Lua.completion.callSnippet`
 - type: `string`
-- default: `Disable`
+- default: `"Disable"`
 - description:    Shows function call snippets.
 ## `Lua.completion.displayContext`
 - type: `integer`
@@ -53,15 +56,15 @@
 - description:    Enable completion.
 ## `Lua.completion.keywordSnippet`
 - type: `string`
-- default: `Replace`
+- default: `"Replace"`
 - description:    Shows keyword syntax snippets.
 ## `Lua.completion.postfix`
 - type: `string`
-- default: `@`
+- default: `"@"`
 - description:    The symbol used to trigger the postfix suggestion.
 ## `Lua.completion.requireSeparator`
 - type: `string`
-- default: `.`
+- default: `"."`
 - description:    The separator used when `require`.
 ## `Lua.completion.showParams`
 - type: `boolean`
@@ -69,7 +72,7 @@
 - description:    Display parameters in completion list. When the function has multiple definitions, they will be displayed separately.
 ## `Lua.completion.showWord`
 - type: `string`
-- default: `Fallback`
+- default: `"Fallback"`
 - description:    Show contextual words in suggestions.
 ## `Lua.completion.workspaceWord`
 - type: `boolean`
@@ -77,11 +80,11 @@
 - description:    Whether the displayed context word contains the content of other files in the workspace.
 ## `Lua.diagnostics.disable`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Disabled diagnostic (Use code in hover brackets).
 ## `Lua.diagnostics.disableScheme`
 - type: `array`
-- default: `git`
+- default: `["git"]`
 - description:    Do not diagnose Lua files that use the following scheme.
 ## `Lua.diagnostics.enable`
 - type: `boolean`
@@ -89,7 +92,7 @@
 - description:    Enable diagnostics.
 ## `Lua.diagnostics.globals`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Defined global variables.
 ## `Lua.diagnostics.groupFileStatus`
 - type: `object`
@@ -112,11 +115,11 @@ Other settings will override individual settings without end of `!`.
 
 ## `Lua.diagnostics.ignoredFiles`
 - type: `string`
-- default: `Opened`
+- default: `"Opened"`
 - description:    How to diagnose ignored files.
 ## `Lua.diagnostics.libraryFiles`
 - type: `string`
-- default: `Opened`
+- default: `"Opened"`
 - description:    How to diagnose files loaded via `Lua.workspace.library`.
 ## `Lua.diagnostics.neededFileStatus`
 - type: `object`
@@ -136,7 +139,7 @@ End with `!` means override the group setting `diagnostics.groupSeverity`.
 
 ## `Lua.diagnostics.unusedLocalExclude`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Do not diagnose `unused-local` when the variable name matches the following pattern.
 ## `Lua.diagnostics.workspaceDelay`
 - type: `integer`
@@ -144,7 +147,7 @@ End with `!` means override the group setting `diagnostics.groupSeverity`.
 - description:    Latency (milliseconds) for workspace diagnostics.
 ## `Lua.diagnostics.workspaceEvent`
 - type: `string`
-- default: `OnSave`
+- default: `"OnSave"`
 - description:    Set the time to trigger workspace diagnostics.
 ## `Lua.diagnostics.workspaceRate`
 - type: `integer`
@@ -152,19 +155,19 @@ End with `!` means override the group setting `diagnostics.groupSeverity`.
 - description:    Workspace diagnostics run rate (%). Decreasing this value reduces CPU usage, but also reduces the speed of workspace diagnostics. The diagnosis of the file you are currently editing is always done at full speed and is not affected by this setting.
 ## `Lua.doc.packageName`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Treat specific field names as package, e.g. `m_*` means `XXX.m_id` and `XXX.m_type` are package, witch can only be accessed in the file where the definition is located.
 ## `Lua.doc.privateName`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Treat specific field names as private, e.g. `m_*` means `XXX.m_id` and `XXX.m_type` are private, witch can only be accessed in the class where the definition is located.
 ## `Lua.doc.protectedName`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Treat specific field names as protected, e.g. `m_*` means `XXX.m_id` and `XXX.m_type` are protected, witch can only be accessed in the class where the definition is located and its subclasses.
 ## `Lua.format.defaultConfig`
 - type: `object`
-- default: ``
+- default: `{}`
 - description:    The default format configuration. Has a lower priority than `.editorconfig` file in the workspace.
 Read [formatter docs](https://github.com/CppCXY/EmmyLuaCodeStyle/tree/master/docs) to learn usage.
 
@@ -174,7 +177,7 @@ Read [formatter docs](https://github.com/CppCXY/EmmyLuaCodeStyle/tree/master/doc
 - description:    Enable code formatter.
 ## `Lua.hint.arrayIndex`
 - type: `string`
-- default: `Auto`
+- default: `"Auto"`
 - description:    Show hints of array index when constructing a table.
 ## `Lua.hint.await`
 - type: `boolean`
@@ -186,7 +189,7 @@ Read [formatter docs](https://github.com/CppCXY/EmmyLuaCodeStyle/tree/master/doc
 - description:    Enable inlay hint.
 ## `Lua.hint.paramName`
 - type: `string`
-- default: `All`
+- default: `"All"`
 - description:    Show hints of parameter name at the function call.
 ## `Lua.hint.paramType`
 - type: `boolean`
@@ -194,7 +197,7 @@ Read [formatter docs](https://github.com/CppCXY/EmmyLuaCodeStyle/tree/master/doc
 - description:    Show type hints at the parameter of the function.
 ## `Lua.hint.semicolon`
 - type: `string`
-- default: `SameLine`
+- default: `"SameLine"`
 - description:    If there is no semicolon at the end of the statement, display a virtual semicolon.
 ## `Lua.hint.setType`
 - type: `boolean`
@@ -231,12 +234,16 @@ Read [formatter docs](https://github.com/CppCXY/EmmyLuaCodeStyle/tree/master/doc
 - description:    The maximum length of a hover to view the contents of a string.
 ## `Lua.misc.executablePath`
 - type: `string`
-- default: ``
-- description:    Specify the executable path in VSCode.
+- default: `""`
+- description:    Specify the executable path.
 ## `Lua.misc.parameters`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Additional command line parameters when starting the language service.
+## `Lua.nameStyle.config`
+- type: `object`
+- default: `{}`
+- description:    Set name style config
 ## `Lua.runtime.builtin`
 - type: `object`
 - default: `undefined`
@@ -248,19 +255,19 @@ Read [formatter docs](https://github.com/CppCXY/EmmyLuaCodeStyle/tree/master/doc
 
 ## `Lua.runtime.fileEncoding`
 - type: `string`
-- default: `utf8`
+- default: `"utf8"`
 - description:    File encoding. The `ansi` option is only available under the `Windows` platform.
 ## `Lua.runtime.meta`
 - type: `string`
-- default: `${version} ${language} ${encoding}`
+- default: `"${version} ${language} ${encoding}"`
 - description:    Format of the directory name of the meta files.
 ## `Lua.runtime.nonstandardSymbol`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Supports non-standard symbols. Make sure that your runtime environment supports these symbols.
 ## `Lua.runtime.path`
 - type: `array`
-- default: `?.lua,?/init.lua`
+- default: `["?.lua","?/init.lua"]`
 - description:    When using `require`, how to find the file based on the input name.
 Setting this config to `?/init.lua` means that when you enter `require 'myfile'`, `${workspace}/myfile/init.lua` will be searched from the loaded files.
 if `runtime.pathStrict` is `false`, `${workspace}/**/myfile/init.lua` will also be searched.
@@ -272,15 +279,15 @@ If you want to load files outside the workspace, you need to set `Lua.workspace.
 - description:    When enabled, `runtime.path` will only search the first level of directories, see the description of `runtime.path`.
 ## `Lua.runtime.plugin`
 - type: `string`
-- default: ``
-- description:    Plugin path. Please read [wiki](https://github.com/LuaLS/lua-language-server/wiki/Plugins) to learn more.
+- default: `""`
+- description:    Plugin path. Please read [wiki](https://luals.github.io/wiki/plugins) to learn more.
 ## `Lua.runtime.pluginArgs`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Additional arguments for the plugin.
 ## `Lua.runtime.special`
 - type: `object`
-- default: ``
+- default: `{}`
 - description:    The custom global variables are regarded as some special built-in variables, and the language server will provide special support
 The following example shows that 'include' is treated as' require '.
 ```json
@@ -295,7 +302,7 @@ The following example shows that 'include' is treated as' require '.
 - description:    Allows Unicode characters in name.
 ## `Lua.runtime.version`
 - type: `string`
-- default: `Lua 5.4`
+- default: `"Lua 5.4"`
 - description:    Lua runtime version.
 ## `Lua.semantic.annotation`
 - type: `boolean`
@@ -319,7 +326,7 @@ The following example shows that 'include' is treated as' require '.
 - description:    Enable signature help.
 ## `Lua.spell.dict`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Custom words for spell checking.
 ## `Lua.type.castNumberToInteger`
 - type: `boolean`
@@ -352,8 +359,8 @@ When this setting is `false`, the `number|boolean` type cannot be assigned to th
 - default: `true`
 - description:    Show extension status in status bar.
 ## `Lua.workspace.checkThirdParty`
-- type: `boolean`
-- default: `true`
+- type: `string,boolean`
+- default: `undefined`
 - description:    Automatic detection and adaptation of third-party libraries, currently supported libraries are:
 
 * OpenResty
@@ -365,7 +372,7 @@ When this setting is `false`, the `number|boolean` type cannot be assigned to th
 
 ## `Lua.workspace.ignoreDir`
 - type: `array`
-- default: `.vscode`
+- default: `[".vscode"]`
 - description:    Ignored files and directories (Use `.gitignore` grammar).
 ## `Lua.workspace.ignoreSubmodules`
 - type: `boolean`
@@ -373,7 +380,7 @@ When this setting is `false`, the `number|boolean` type cannot be assigned to th
 - description:    Ignore submodules.
 ## `Lua.workspace.library`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    In addition to the current workspace, which directories will load files from. The files in these directories will be treated as externally provided code libraries, and some features (such as renaming fields) will not modify these files.
 ## `Lua.workspace.maxPreload`
 - type: `integer`
@@ -389,5 +396,5 @@ When this setting is `false`, the `number|boolean` type cannot be assigned to th
 - description:    Ignore files list in `.gitignore` .
 ## `Lua.workspace.userThirdParty`
 - type: `array`
-- default: ``
+- default: `[]`
 - description:    Add private third-party library configuration file paths here, please refer to the built-in [configuration file path](https://github.com/LuaLS/lua-language-server/tree/master/meta/3rd)

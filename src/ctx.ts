@@ -1,4 +1,4 @@
-import { ServerInstaller } from '@statiolake/coc-utils/out/installer';
+import { ServerInstaller } from "@statiolake/coc-utils/out/installer";
 import {
   commands,
   Disposable,
@@ -11,16 +11,16 @@ import {
   TextDocument,
   window,
   workspace,
-} from 'coc.nvim';
-import * as fs from 'fs-extra';
-import path from 'path';
-import { Config } from './config';
-import { getPacks, getRepo } from './installer';
-import { Neodev } from './neodev';
+} from "coc.nvim";
+import * as fs from "fs-extra";
+import path from "path";
+import { Config } from "./config";
+import { getPacks, getRepo } from "./installer";
+import { Neodev } from "./neodev";
 
-export type LuaDocument = TextDocument & { languageId: 'lua' };
+export type LuaDocument = TextDocument & { languageId: "lua" };
 export function isLuaDocument(document: TextDocument): document is LuaDocument {
-  const ret = document.languageId === 'lua';
+  const ret = document.languageId === "lua";
   return ret;
 }
 
@@ -29,18 +29,18 @@ export type Cmd = (...args: any[]) => unknown;
 export class Ctx {
   client!: LanguageClient;
   public readonly config = new Config();
-  barTooltip = '';
+  barTooltip = "";
   neodev!: Neodev;
   public readonly installer: ServerInstaller;
 
   constructor(public readonly extctx: ExtensionContext) {
     this.neodev = new Neodev(extctx);
     this.installer = new ServerInstaller(
-      'lua-language-server',
+      "lua-language-server",
       extctx,
       getPacks(),
       getRepo(this.config.version),
-      this.config.customPath
+      this.config.customPath,
     );
   }
 
@@ -64,11 +64,13 @@ export class Ctx {
     // lua-language-serber should be in .../bin/lua-language-server, so we
     // need two dirnames to get server directory.
     const serverDir = path.dirname(path.dirname(bin));
-    const miscParameters = workspace.getConfiguration('Lua').get<string[]>('misc.parameters')!;
+    const miscParameters = workspace
+      .getConfiguration("Lua")
+      .get<string[]>("misc.parameters")!;
 
     const args: string[] = [
-      '-E',
-      path.join(serverDir, 'bin', 'main.lua'),
+      "-E",
+      path.join(serverDir, "bin", "main.lua"),
       `--locale=${this.config.locale}`,
       ...miscParameters,
     ];
@@ -83,43 +85,41 @@ export class Ctx {
   public async ensureInstalled(): Promise<boolean> {
     const res = await this.installer.ensureInstalled(
       this.config.prompt === true,
-      this.config.prompt !== 'neverDownload'
+      this.config.prompt !== "neverDownload",
     );
 
-    logger.appendLine('ensureInstalled() result: ' + JSON.stringify(res));
+    logger.appendLine("ensureInstalled() result: " + JSON.stringify(res));
     return res.available;
   }
 
   public async ensureUpdated(auto = true): Promise<void> {
     logger.appendLine(`Check update (auto: ${auto})`);
     if (auto && !this.config.checkOnStartup) {
-      logger.appendLine('Skip update check, config `checkOnStartup` is disabled.');
+      logger.appendLine(
+        "Skip update check, config `checkOnStartup` is disabled.",
+      );
       return;
     }
 
     const res = await this.installer.ensureUpdated(
       this.config.prompt === true,
-      this.config.prompt !== 'neverDownload',
+      this.config.prompt !== "neverDownload",
       !auto,
-      this.client
+      this.client,
     );
-    logger.appendLine('ensureUpdated() result: ' + JSON.stringify(res));
+    logger.appendLine("ensureUpdated() result: " + JSON.stringify(res));
 
-    if ('error' in res) {
-      logger.appendLine('error stacktrace: ' + res.error.stack);
-    }
-
-    if ('startedClientDisposable' in res && res.startedClientDisposable) {
-      this.extctx.subscriptions.push(res.startedClientDisposable);
+    if ("error" in res) {
+      logger.appendLine("error stacktrace: " + res.error.stack);
     }
   }
 
   async getCurrentVersion(): Promise<string | undefined> {
     const version = await this.installer.checkVersion();
-    if (version.result === 'different') {
+    if (version.result === "different") {
       return version.currentVersion;
     }
-    if (version.result === 'same') {
+    if (version.result === "same") {
       return version.version;
     }
     return undefined;
@@ -136,7 +136,7 @@ export class Ctx {
     const serverOptions: ServerOptions = { command, args };
 
     const clientOptions: LanguageClientOptions = {
-      documentSelector: [{ language: 'lua' }],
+      documentSelector: [{ language: "lua" }],
       progressOnInitialization: true,
       initializationOptions: {
         changeConfiguration: true,
@@ -146,33 +146,26 @@ export class Ctx {
           configuration: async (params, token, next) => {
             const result = await next(params, token);
 
-            if (!this.config.nvimLuaDev || !Array.isArray(result)) {
+            if (!this.config.nvimLuaDev || !Array.isArray(result))
               return result;
-            }
 
-            const sectionIndex = params.items.findIndex((item) => {
-              if (item.section == 'Lua') {
-                return true;
-              }
-            });
+            const sectionIndex = params.items.findIndex(
+              (item) => item.section === "Lua",
+            );
 
-            if (sectionIndex == -1) {
-              return result;
-            }
+            if (sectionIndex === -1) return result;
 
             const configuration = result[sectionIndex];
 
             const library = configuration.workspace.library || [];
 
-            const runtime = await workspace.nvim.call('expand', ['$VIMRUNTIME/lua']);
-            if (!library.includes(runtime)) {
-              library.push(runtime);
-            }
+            const runtime = await workspace.nvim.call("expand", [
+              "$VIMRUNTIME/lua",
+            ]);
+            if (!library.includes(runtime)) library.push(runtime);
 
             const types = await this.neodev.getTypesPath();
-            if (types && !library.includes(types)) {
-              library.push(types);
-            }
+            if (types && !library.includes(types)) library.push(types);
 
             configuration.workspace.library = library;
 
@@ -183,13 +176,18 @@ export class Ctx {
         },
       },
     };
-    return new LanguageClient('sumneko-lua', 'Sumneko Lua Language Server', serverOptions, clientOptions);
+    return new LanguageClient(
+      "sumneko-lua",
+      "Sumneko Lua Language Server",
+      serverOptions,
+      clientOptions,
+    );
   }
 
   async startServer() {
     const client = this.createClient();
     if (!client) return;
-    this.extctx.subscriptions.push(services.registLanguageClient(client));
+    this.extctx.subscriptions.push(services.registerLanguageClient(client));
     await client.onReady();
     this.client = client;
     // activate components
@@ -204,23 +202,23 @@ export class Ctx {
 
     let keepHide = false;
 
-    this.client.onNotification('$/status/show', () => {
+    this.client.onNotification("$/status/show", () => {
       keepHide = false;
       bar.show();
     });
-    this.client.onNotification('$/status/hide', () => {
+    this.client.onNotification("$/status/hide", () => {
       keepHide = true;
       bar.hide();
     });
-    this.client.onNotification('$/status/report', (params) => {
+    this.client.onNotification("$/status/report", (params) => {
       const text: string = params.text;
-      bar.isProgress = text.includes('$(loading~spin)');
-      bar.text = text.replace('$(loading~spin)', '');
+      bar.isProgress = text.includes("$(loading~spin)");
+      bar.text = text.replace("$(loading~spin)", "");
       this.barTooltip = params.tooltip;
     });
 
     events.on(
-      'BufEnter',
+      "BufEnter",
       async () => {
         const doc = await workspace.document;
         if (isLuaDocument(doc.textDocument)) {
@@ -230,20 +228,22 @@ export class Ctx {
         }
       },
       null,
-      this.extctx.subscriptions
+      this.extctx.subscriptions,
     );
   }
 
   activateCommand() {
-    this.client.onNotification('$/command', (params) => {
-      if (params.command != 'lua.config') {
-        return;
-      }
+    this.client.onNotification("$/command", (params) => {
+      if (params.command !== "lua.config") return;
+
       const propMap: Map<string, Map<string, any>> = new Map();
       for (const data of params.data) {
         const folder = workspace.getWorkspaceFolder(data.uri);
-        const config = workspace.getConfiguration(undefined, folder ? data.uri : undefined);
-        if (data.action == 'add') {
+        const config = workspace.getConfiguration(
+          undefined,
+          folder ? data.uri : undefined,
+        );
+        if (data.action === "add") {
           let value = config.get<any[]>(data.key, []);
           // weird...
           value = Array.from(value);
@@ -251,14 +251,13 @@ export class Ctx {
           config.update(data.key, value, data.global);
           continue;
         }
-        if (data.action == 'set') {
+        if (data.action === "set") {
           config.update(data.key, data.value, data.global);
           continue;
         }
-        if (data.action == 'prop') {
-          if (!propMap[data.key]) {
-            propMap[data.key] = config.get(data.key);
-          }
+        if (data.action === "prop") {
+          if (!propMap[data.key]) propMap[data.key] = config.get(data.key);
+
           propMap[data.key][data.prop] = data.value;
           config.update(data.key, propMap[data.key], data.global);
           continue;
