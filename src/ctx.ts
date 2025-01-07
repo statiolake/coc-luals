@@ -47,7 +47,12 @@ export class Ctx {
 
   registerCommand(name: string, cmd: (ctx: Ctx) => unknown, internal = false) {
     const fullName = `sumneko-lua.${name}`;
-    const d = commands.registerCommand(fullName, cmd, null, internal);
+    const d = commands.registerCommand(
+      fullName,
+      () => cmd(this),
+      null,
+      internal,
+    );
     this.extctx.subscriptions.push(d);
   }
 
