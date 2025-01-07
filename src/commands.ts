@@ -1,11 +1,12 @@
-import { window, workspace } from 'coc.nvim';
-import path from 'path';
-import { Ctx } from './ctx';
-import { existsSync } from 'fs-extra';
+import { window, workspace } from "coc.nvim";
+import { existsSync } from "fs-extra";
+import path from "path";
+import { logger } from ".";
+import { Ctx } from "./ctx";
 
 export async function install(ctx: Ctx) {
   try {
-    logger.appendLine('installing lua-language-server...');
+    logger.appendLine("installing lua-language-server...");
     const res = await ctx.installer.install(true);
     logger.appendLine(`lua-language-server installed: ${res}`);
   } catch (err) {
@@ -16,7 +17,7 @@ export async function install(ctx: Ctx) {
 
 export async function update(ctx: Ctx) {
   try {
-    logger.appendLine('updating lua-language-server...');
+    logger.appendLine("updating lua-language-server...");
     const res = await ctx.installer.ensureUpdated(true, true, true, undefined);
     logger.appendLine(`lua-language-server updated: ${res}`);
   } catch (err) {
@@ -26,7 +27,7 @@ export async function update(ctx: Ctx) {
 }
 
 export async function version(ctx: Ctx) {
-  const v = (await ctx.getCurrentVersion()) || 'unknown version';
+  const v = (await ctx.getCurrentVersion()) || "unknown version";
   window.showInformationMessage(v);
 }
 
@@ -35,25 +36,30 @@ export async function showTooltip(ctx: Ctx) {
 }
 
 export async function insertNvimLuaPluginLibrary(_: Ctx) {
-  const config = workspace.getConfiguration('Lua.workspace');
-  const library = Array.from(config.get<string[]>('library') || []);
+  const config = workspace.getConfiguration("Lua.workspace");
+  const library = Array.from(config.get<string[]>("library") || []);
 
-  const runtimepath = (await workspace.nvim.getOption('runtimepath')) as string;
+  const runtimepath = (await workspace.nvim.getOption("runtimepath")) as string;
   const paths = runtimepath
-    .split(',')
+    .split(",")
     .map((v) => {
-      return path.join(v, 'lua');
+      return path.join(v, "lua");
     })
     .filter((v) => !library.includes(v) && existsSync(v));
 
   if (!paths.length) return;
 
-  const vimruntime = (await workspace.nvim.call('expand', ['$VIMRUNTIME/lua'])) as string;
-  const myvimrc = path.join(path.dirname(await workspace.nvim.call('expand', ['$MYVIMRC'])), 'lua');
+  const vimruntime = (await workspace.nvim.call("expand", [
+    "$VIMRUNTIME/lua",
+  ])) as string;
+  const myvimrc = path.join(
+    path.dirname(await workspace.nvim.call("expand", ["$MYVIMRC"])),
+    "lua",
+  );
 
   const idx = await window.showQuickpick(
     paths.map((v, i) => {
-      let name = '';
+      let name = "";
 
       if (v == vimruntime) {
         name = `${vimruntime} (auto added if sumneko-lua.enableNvimLuaDev is true )`;
@@ -64,11 +70,11 @@ export async function insertNvimLuaPluginLibrary(_: Ctx) {
       }
 
       return i < 9 ? ` ${name}` : name;
-    })
+    }),
   );
   if (idx != -1) {
     library.push(paths[idx]);
-    config.update('library', library);
+    config.update("library", library);
   }
 }
 

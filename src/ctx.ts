@@ -14,6 +14,7 @@ import {
 } from "coc.nvim";
 import * as fs from "fs-extra";
 import path from "path";
+import { logger } from ".";
 import { Config } from "./config";
 import { getPacks, getRepo } from "./installer";
 import { Neodev } from "./neodev";
