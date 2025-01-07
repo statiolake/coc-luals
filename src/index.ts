@@ -2,7 +2,8 @@ import { ExtensionContext, OutputChannel, window } from "coc.nvim";
 import * as cmds from "./commands";
 import { Ctx } from "./ctx";
 
-export const logger: OutputChannel = window.createOutputChannel("coc-stylua");
+export const logger: OutputChannel =
+  window.createOutputChannel("coc-sumneko-lua");
 
 export async function activate(extctx: ExtensionContext): Promise<void> {
   logger.appendLine("activating coc-sumneko-lua...");
