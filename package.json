@@ -1,12 +1,12 @@
 {
-  "name": "@statiolake/coc-sumneko-lua",
+  "name": "@statiolake/coc-luals",
   "version": "0.0.46",
   "description": "Lua extension using sumneko lua-language-server for coc.nvim",
   "author": "statiolake <statiolake@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/statiolake/coc-sumneko-lua.git"
+    "url": "https://github.com/statiolake/coc-luals.git"
   },
   "keywords": [
     "coc.nvim"
@@ -21,14 +21,14 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "coc-sumneko-lua configuration",
+      "title": "coc-luals configuration",
       "properties": {
-        "sumneko-lua.enable": {
+        "luals.enable": {
           "type": "boolean",
           "default": true,
-          "description": "Enable coc-sumneko-lua extension"
+          "description": "Enable coc-luals extension"
         },
-        "sumneko-lua.prompt": {
+        "luals.prompt": {
           "type": [
             "boolean",
             "string"
@@ -41,7 +41,7 @@
           "default": true,
           "description": "Prompt when server is not found or when server can be updated"
         },
-        "sumneko-lua.locale": {
+        "luals.locale": {
           "type": "string",
           "default": "en-us",
           "enum": [
@@ -58,27 +58,27 @@
             "`\"pt-br\"` Português"
           ]
         },
-        "sumneko-lua.logPath": {
+        "luals.logPath": {
           "type": "string",
           "default": "",
           "description": "The log path"
         },
-        "sumneko-lua.enableNvimLuaDev": {
+        "luals.enableNvimLuaDev": {
           "type": "boolean",
           "default": false,
           "description": "Enable the nvim lua development"
         },
-        "sumneko-lua.checkOnStartup": {
+        "luals.checkOnStartup": {
           "type": "boolean",
           "default": true,
           "description": "Automatically check for updates after startup(Only one check within 4 hours)"
         },
-        "sumneko-lua.version": {
+        "luals.version": {
           "type": "string",
           "default": "latest",
           "description": "The server version to download."
         },
-        "sumneko-lua.customPath": {
+        "luals.customPath": {
           "type": "string",
           "description": "The custom server path."
         },
@@ -3193,37 +3193,37 @@
     },
     "commands": [
       {
-        "command": "sumneko-lua.install",
+        "command": "luals.install",
         "title": "Install or update sumneko lua-language-server",
         "category": "Sumneko lua-language-server"
       },
       {
-        "command": "sumneko-lua.restart",
+        "command": "luals.restart",
         "title": "Restart server",
         "category": "Sumneko lua-language-server"
       },
       {
-        "command": "sumneko-lua.version",
+        "command": "luals.version",
         "title": "Echo server version",
         "category": "Sumneko lua-language-server"
       },
       {
-        "command": "sumneko-lua.checkUpdate",
+        "command": "luals.checkUpdate",
         "title": "Check update",
         "category": "Sumneko lua-language-server"
       },
       {
-        "command": "sumneko-lua.showTooltip",
+        "command": "luals.showTooltip",
         "title": "Show tooltips",
         "category": "Sumneko lua-language-server"
       },
       {
-        "command": "sumneko-lua.insertNvimLuaPluginLibrary",
+        "command": "luals.insertNvimLuaPluginLibrary",
         "title": "Insert nvim lua plugin to current workspace library",
         "category": "Sumneko lua-language-server"
       },
       {
-        "command": "sumneko-lua.downloadNvimLuaTypes",
+        "command": "luals.downloadNvimLuaTypes",
         "title": "Download/Update nvim lua types(Clone https://github.com/folke/neodev.nvim)",
         "category": "Sumneko lua-language-server"
       }

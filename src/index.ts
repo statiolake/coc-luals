@@ -2,11 +2,10 @@ import { ExtensionContext, OutputChannel, window } from "coc.nvim";
 import * as cmds from "./commands";
 import { Ctx } from "./ctx";
 
-export const logger: OutputChannel =
-  window.createOutputChannel("coc-sumneko-lua");
+export const logger: OutputChannel = window.createOutputChannel("coc-luals");
 
 export async function activate(extctx: ExtensionContext): Promise<void> {
-  logger.appendLine("activating coc-sumneko-lua...");
+  logger.appendLine("activating coc-luals...");
 
   const ctx = new Ctx(extctx);
   if (!ctx.config.enabled) {
@@ -45,5 +44,5 @@ export async function activate(extctx: ExtensionContext): Promise<void> {
   await ctx.startServer();
   await ctx.ensureUpdated();
 
-  logger.appendLine("Activated coc-sumneko-lua.");
+  logger.appendLine("Activated coc-luals.");
 }

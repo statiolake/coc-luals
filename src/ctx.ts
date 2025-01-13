@@ -46,7 +46,7 @@ export class Ctx {
   }
 
   registerCommand(name: string, cmd: (ctx: Ctx) => unknown, internal = false) {
-    const fullName = `sumneko-lua.${name}`;
+    const fullName = `luals.${name}`;
     const d = commands.registerCommand(
       fullName,
       () => cmd(this),
@@ -183,7 +183,7 @@ export class Ctx {
       },
     };
     return new LanguageClient(
-      "sumneko-lua",
+      "luals",
       "Sumneko Lua Language Server",
       serverOptions,
       clientOptions,

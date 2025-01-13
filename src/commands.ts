@@ -62,7 +62,7 @@ export async function insertNvimLuaPluginLibrary(_: Ctx) {
       let name = "";
 
       if (v == vimruntime) {
-        name = `${vimruntime} (auto added if sumneko-lua.enableNvimLuaDev is true )`;
+        name = `${vimruntime} (auto added if luals.enableNvimLuaDev is true )`;
       } else if (v == myvimrc) {
         name = `${myvimrc} (not recommended)`;
       } else {
