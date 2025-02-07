@@ -1,6 +1,6 @@
 {
   "name": "@statiolake/coc-luals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lua extension using sumneko lua-language-server for coc.nvim",
   "author": "statiolake <statiolake@gmail.com>",
   "license": "MIT",
