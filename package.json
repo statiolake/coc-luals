@@ -3240,7 +3240,7 @@
     "release": "bumpp && npm publish"
   },
   "dependencies": {
-    "@statiolake/coc-utils": "^0.2.3",
+    "@statiolake/coc-utils": "^0.2.4",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
