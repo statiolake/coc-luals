@@ -28,13 +28,14 @@ export function isLuaDocument(document: TextDocument): document is LuaDocument {
 export type Cmd = (...args: any[]) => unknown;
 
 export class Ctx {
-  client!: LanguageClient;
+  client: LanguageClient | undefined;
   public readonly config = new Config();
   barTooltip = "";
-  neodev!: Neodev;
+  neodev: Neodev;
   public readonly installer: ServerInstaller;
 
   constructor(public readonly extctx: ExtensionContext) {
+    this.client = undefined;
     this.neodev = new Neodev(extctx);
     this.installer = new ServerInstaller(
       "lua-language-server",
@@ -208,6 +209,10 @@ export class Ctx {
 
     let keepHide = false;
 
+    if (!this.client) {
+      throw new Error("client is null");
+    }
+
     this.client.onNotification("$/status/show", () => {
       keepHide = false;
       bar.show();
@@ -239,6 +244,10 @@ export class Ctx {
   }
 
   activateCommand() {
+    if (!this.client) {
+      throw new Error("client is null");
+    }
+
     this.client.onNotification("$/command", (params) => {
       if (params.command !== "lua.config") return;
 
