@@ -3250,7 +3250,7 @@
     "@wongxy/eslint-config": "^1.1.1",
     "bumpp": "^10.0.1",
     "coc.nvim": "^0.0.83-next.18",
-    "esbuild": "0.25.1",
+    "esbuild": "0.25.4",
     "eslint": "^9.17.0",
     "executable": "^4.1.1",
     "extract-zip": "^2.0.1",
