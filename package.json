@@ -3245,7 +3245,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.10.5",
+    "@types/node": "^24.0.3",
     "@types/node-fetch": "2.6.12",
     "@wongxy/eslint-config": "^1.1.1",
     "bumpp": "^10.0.1",
