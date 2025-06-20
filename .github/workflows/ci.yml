@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     
     strategy:
@@ -28,6 +28,3 @@ jobs:
     
     - name: Build
       run: npm run build
-    
-    - name: Generate schema
-      run: npm run schema || true  # Allow this to fail for now
