@@ -1,0 +1,39 @@
+name: Dependabot Auto-merge
+
+on:
+  pull_request_target:
+    types: [labeled, synchronize, reopened, ready_for_review]
+
+permissions:
+  pull-requests: write
+  contents: write
+  checks: read
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Wait for CI to complete
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor' }}
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-name: test
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+
+      - name: Auto-merge Dependabot PRs for patch and minor updates
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor' }}
+        run: |
+          gh pr checkout "$PR_URL" # sets the upstream metadata for `gh pr status`
+          gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -9,3 +9,8 @@ updates:
     directory: / # Location of package manifests
     schedule:
       interval: weekly
+    open-pull-requests-limit: 10
+    # Enable auto-merge for patch and minor updates
+    allow:
+      - dependency-type: direct
+      - dependency-type: indirect
