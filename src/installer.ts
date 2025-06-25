@@ -25,6 +25,11 @@ export function getPacks(): ILanguageServerPackages {
       archiver: "tar-gzip",
       executable: "bin/lua-language-server",
     },
+    "linux-arm64": {
+      platformFilename: /lua-language-server-.*-linux-arm64.tar.gz/,
+      archiver: "tar-gzip",
+      executable: "bin/lua-language-server",
+    },
   };
 }
 
